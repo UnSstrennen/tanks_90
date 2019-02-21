@@ -12,7 +12,17 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="469">
+              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -24,6 +34,8 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>fires.pop</find>
+      <find>enemys</find>
+      <find>no_coord</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -121,13 +133,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13382508" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13382508" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -148,13 +161,12 @@
     <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_right.png" />
     <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_up.png" />
     <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/fire.png" />
-    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/main.py">
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/.gitignore" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/main.py" />
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="50" column="32" lean-forward="true" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+        <state relative-caret-position="469">
+          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
         </state>
       </provider>
     </entry>

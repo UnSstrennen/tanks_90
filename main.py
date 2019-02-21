@@ -4,10 +4,13 @@ pygame.init()
 screen = pygame.display.set_mode((1000, 900))
 screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])
 tanks, run, move_tank, SPEED = [], True, False, 10
+time_of_last_shooting = 0
 no_coord, fires = [], []
-enemys = []
 clock = pygame.time.Clock()
 clock.tick()
+
+shoot_clock = pygame.time.Clock()
+
 for x in list(range(0, 230)) + list(range(710, 901)):
     n = []
     for y in range(221):
@@ -28,7 +31,7 @@ class Player:
         self.paint()
 
     def move(self, x, y):
-        if 870 >= self.x + x >= 20 and 870 >= self.y + y >= 20 and (self.x + x, self.y + y) not in no_coord:
+        if 870 >= self.x + x >= 20 and 870 >= self.y + y >= 20:
                 self.x += x
                 self.y += y
                 self.paint()
@@ -77,14 +80,7 @@ class Enemy(Player):
         self.x, self.y = x, y
         self.nx, self.ny = 0, 5
         self.player_image = pygame.image.load('img/enemy_down.png').convert_alpha()
-
-    def growth(self):
-        self.x += self.nx
-        self.y += self.ny
-        if 900 >= self.x >= 0 and 900 >= self.y >= 0 and (self.x, self.y) not in no_coord:
-            screen.blit(self.player_image, [self.x, self.y])
-        else:
-            self.clear()
+        self.paint()
 
 
 player = Player((450, 450))
@@ -98,13 +94,20 @@ while run:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                player.fire()
+                SHOOT_PERIOD = 500
+                if pygame.time.get_ticks() - time_of_last_shooting >= SHOOT_PERIOD:
+                    enemy.fire()
+                    time_of_last_shooting = pygame.time.get_ticks()
+
+            if event.key == pygame.K_RALT:
+                SHOOT_PERIOD = 500
+                if pygame.time.get_ticks() - time_of_last_shooting >= SHOOT_PERIOD:
+                    player.fire()
+                    time_of_last_shooting = pygame.time.get_ticks()
+
         elif event.type == 2:
-            enemys.append(Enemy(500, 50))
             pygame.time.set_timer(1, 0)
             pygame.time.set_timer(2, 1000)
-    for i in enemys:
-        i.growth()
 
     for fire in fires:
         fire.growth()
@@ -126,7 +129,24 @@ while run:
         player.img('img/tank_down.png')
         player.move(0, SPEED)
 
+    if keys[pygame.K_a]:
+        enemy.img('img/enemy_left.png')
+        enemy.move(-SPEED, 0)
+
+    elif keys[pygame.K_d]:
+        enemy.img('img/enemy_right.png')
+        enemy.move(SPEED, 0)
+
+    elif keys[pygame.K_w]:
+        enemy.img('img/enemy_up.png')
+        enemy.move(0, -SPEED)
+
+    elif keys[pygame.K_s]:
+        enemy.img('img/enemy_down.png')
+        enemy.move(0, SPEED)
+
     player.paint()
+    enemy.paint()
     pygame.display.flip()
 
 

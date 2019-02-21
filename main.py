@@ -26,6 +26,7 @@ class Player:
     def __init__(self, pos):
         self.x, self.y = pos
         self.go = 'up'
+        self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/tank_up.png').convert_alpha()
         screen.blit(self.player_image, self.player_image.get_rect(center=(self.x, self.y)))
         self.paint()
@@ -45,6 +46,9 @@ class Player:
 
     def fire(self):
         BULLET_SPEED = 20
+        SHOOT_PERIOD = 500
+        if not pygame.time.get_ticks() - self.time_of_last_shooting >= SHOOT_PERIOD:
+            return
         if self.go == 'up':
             x, y = 0, -BULLET_SPEED
         elif self.go == 'down':
@@ -55,6 +59,7 @@ class Player:
             x, y = BULLET_SPEED, 0
         ball = Bullet(self.x, self.y, x, y, len(fires))
         fires.append(ball)
+        self.time_of_last_shooting = pygame.time.get_ticks()
 
 
 class Bullet:
@@ -79,6 +84,8 @@ class Enemy(Player):
     def __init__(self, x, y):
         self.x, self.y = x, y
         self.nx, self.ny = 0, 5
+        self.go = 'down'
+        self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/enemy_down.png').convert_alpha()
         self.paint()
 
@@ -94,16 +101,10 @@ while run:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                SHOOT_PERIOD = 500
-                if pygame.time.get_ticks() - time_of_last_shooting >= SHOOT_PERIOD:
-                    enemy.fire()
-                    time_of_last_shooting = pygame.time.get_ticks()
+                enemy.fire()
 
             if event.key == pygame.K_RALT:
-                SHOOT_PERIOD = 500
-                if pygame.time.get_ticks() - time_of_last_shooting >= SHOOT_PERIOD:
-                    player.fire()
-                    time_of_last_shooting = pygame.time.get_ticks()
+                player.fire()
 
         elif event.type == 2:
             pygame.time.set_timer(1, 0)
@@ -111,6 +112,12 @@ while run:
 
     for fire in fires:
         fire.growth()
+
+        # check the hit
+        # enemy
+        size_x, size_y = enemy.player_image.get_size()
+        if enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2:
+            print("yep")
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:

@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e1234394-1ec0-4497-9ebe-ec8333d4d89e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -19,6 +20,11 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>fires.pop</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -41,12 +47,22 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="tanks_90" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tanks_90" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="P:/alpha-home" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/projects.lnk" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -111,7 +127,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -126,28 +142,19 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/background.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/background.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_down.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_left.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_right.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/enemy_up.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/fire.png" />
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/enemy_down.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/enemy_left.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/enemy_right.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/enemy_up.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/fire.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:$PROJECT_DIR$/../../../../../..//$PROJECT_DIR$/main.py">
+    <entry file="file:P:/../../..//P:/!.users/Амиров Камиль/tanks_90/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="95" column="42" lean-forward="true" selection-start-line="95" selection-start-column="42" selection-end-line="95" selection-end-column="42" />
+        <state relative-caret-position="163">
+          <caret line="50" column="32" lean-forward="true" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
         </state>
       </provider>
     </entry>

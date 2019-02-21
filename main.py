@@ -41,21 +41,23 @@ class Player:
         self.player_image = pygame.image.load(name).convert_alpha()
 
     def fire(self):
+        BULLET_SPEED = 20
         if self.go == 'up':
-            x, y = 0, -5
+            x, y = 0, -BULLET_SPEED
         elif self.go == 'down':
-            x, y = 0, 5
+            x, y = 0, BULLET_SPEED
         elif self.go == 'left':
-            x, y = -5, 0
+            x, y = -BULLET_SPEED, 0
         elif self.go == 'right':
-            x, y = 5, 0
+            x, y = BULLET_SPEED, 0
         ball = Bullet(self.x, self.y, x, y, len(fires))
         fires.append(ball)
 
 
 class Bullet:
     def __init__(self, x, y, nx, ny, ind):
-        self.x, self.y, self.nx, self.ny, self.ind = x, y, nx, ny, ind
+        OFFSET = -3.1  # aligns bullet
+        self.x, self.y, self.nx, self.ny, self.ind = x + OFFSET, y + OFFSET, nx, ny, ind
         self.player_image = pygame.image.load('img/fire.png').convert_alpha()
 
     def growth(self):
@@ -86,6 +88,7 @@ class Enemy(Player):
 
 
 player = Player((450, 450))
+enemy = Enemy(100, 100)
 pygame.time.set_timer(1, 500)
 while run:
     screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])

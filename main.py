@@ -100,10 +100,11 @@ while run:
             run = False
 
         elif event.type == pygame.KEYDOWN:
+
             if event.key == pygame.K_SPACE:
                 enemy.fire()
 
-            if event.key == pygame.K_RALT:
+            if event.key == pygame.K_QUOTE:
                 player.fire()
 
         elif event.type == 2:
@@ -117,7 +118,7 @@ while run:
         # enemy
         size_x, size_y = enemy.player_image.get_size()
         if enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2:
-            print("yep")
+            pass
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:

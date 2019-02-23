@@ -11,6 +11,11 @@ no_coord, fires = [], []
 clock = pygame.time.Clock()
 clock.tick()
 
+pygame.mixer.init()
+background_sound = pygame.mixer.Sound('sound/background.wav')
+background_sound.set_volume(0.5)
+background_sound.play(-1)
+
 shoot_clock = pygame.time.Clock()
 
 for x in list(range(0, 230)) + list(range(710, 901)):
@@ -30,6 +35,7 @@ class Player:
         self.alive = True
         self.time_of_last_death = 0
         self.go = 'up'
+        self.sound = pygame.mixer.music.load('sound/background.mp3')
         self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/tank_up.png').convert_alpha()
         screen.blit(self.player_image, self.player_image.get_rect(center=(self.x, self.y)))
@@ -68,12 +74,14 @@ class Player:
             ball = Bullet(self.x, self.y, x, y, len(fires))
             fires.append(ball)
             self.time_of_last_shooting = pygame.time.get_ticks()
+            pygame.mixer.Sound('sound/shoot.wav').play()
 
     def die(self):
         if self.alive:
             self.img('img/fire.png')
             self.alive = False
             self.time_of_last_death = pygame.time.get_ticks()
+            pygame.mixer.Sound('sound/hit.wav').play()
 
     def respawn(self):
         if pygame.time.get_ticks() - self.time_of_last_death >= RESPAWN_PERIOD:
@@ -105,6 +113,7 @@ class Enemy(Player):
         self.x, self.y = x, y
         self.time_of_last_death = 0
         self.nx, self.ny = 0, 5
+        self.sound = pygame.mixer.Sound('sound/move.wav')
         self.go = 'down'
         self.alive = True
         self.time_of_last_shooting = 0

@@ -35,7 +35,6 @@ class Player:
         self.alive = True
         self.time_of_last_death = 0
         self.go = 'up'
-        self.sound = pygame.mixer.music.load('sound/background.mp3')
         self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/tank_up.png').convert_alpha()
         screen.blit(self.player_image, self.player_image.get_rect(center=(self.x, self.y)))
@@ -55,6 +54,8 @@ class Player:
         if self.alive:
             if name != 'img/fire.png':
                 self.go = name.split('_')[-1][0:-4]
+            self.player_image = pygame.image.load(name).convert_alpha()
+        if 'bang' in name:
             self.player_image = pygame.image.load(name).convert_alpha()
 
     def fire(self):
@@ -78,15 +79,22 @@ class Player:
 
     def die(self):
         if self.alive:
-            self.img('img/fire.png')
             self.alive = False
             self.time_of_last_death = pygame.time.get_ticks()
             pygame.mixer.Sound('sound/hit.wav').play()
+            self.respawn()
 
     def respawn(self):
-        if pygame.time.get_ticks() - self.time_of_last_death >= RESPAWN_PERIOD:
+        time_from_death = pygame.time.get_ticks() - self.time_of_last_death
+        if time_from_death >= RESPAWN_PERIOD:
             self.alive = True
             player.img('img/tank_' + self.go + '.png')
+            return
+        # set frame
+        frame_num = time_from_death // (RESPAWN_PERIOD // 7)
+        if frame_num == 0:
+            frame_num = 1
+        self.img('img/bang/kill' + str(frame_num) + '.png')
 
 
 class Bullet:
@@ -113,7 +121,6 @@ class Enemy(Player):
         self.x, self.y = x, y
         self.time_of_last_death = 0
         self.nx, self.ny = 0, 5
-        self.sound = pygame.mixer.Sound('sound/move.wav')
         self.go = 'down'
         self.alive = True
         self.time_of_last_shooting = 0
@@ -145,7 +152,7 @@ while run:
     for fire in fires:
         fire.growth()
 
-        #c= check kills
+        # check kills
         size_x, size_y = enemy.player_image.get_size()
         killed_enemy = enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2 and enemy.y - size_y // 2 <= fire.y <= enemy.y + size_y // 2
 

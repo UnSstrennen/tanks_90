@@ -65,6 +65,7 @@ class Player:
 class Bullet:
     def __init__(self, x, y, nx, ny, ind):
         OFFSET = -3.1  # aligns bullet
+        self.flew = False
         self.x, self.y, self.nx, self.ny, self.ind = x + OFFSET, y + OFFSET, nx, ny, ind
         self.player_image = pygame.image.load('img/fire.png').convert_alpha()
 
@@ -114,11 +115,23 @@ while run:
     for fire in fires:
         fire.growth()
 
-        # check the hit
-        # enemy
+        #c= check kills
         size_x, size_y = enemy.player_image.get_size()
-        if enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2:
-            pass
+        killed_enemy = enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2 and enemy.y - size_y // 2 <= fire.y <= enemy.y + size_y // 2
+
+        size_x, size_y = player.player_image.get_size()
+        killed_player = player.x - size_x // 2 <= fire.x <= player.x + size_x // 2 and player.y - size_y // 2 <= fire.y <= player.y + size_y // 2
+
+        # check: did the fire flew from tank
+        if not fire.flew and (killed_player or killed_enemy):
+            continue
+        else:
+            fire.flew = True
+
+        if killed_enemy:
+            print("enemy killed")
+        if killed_player:
+            print("player killed")
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:

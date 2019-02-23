@@ -155,10 +155,14 @@ while run:
 
         # check kills
         size_x, size_y = enemy.player_image.get_size()
-        killed_enemy = enemy.x - size_x // 2 <= fire.x <= enemy.x + size_x // 2 and enemy.y - size_y // 2 <= fire.y <= enemy.y + size_y // 2
+        killed_enemy = enemy.x - size_x // 2 <= fire.x \
+                       <= enemy.x + size_x // 2 and \
+                       enemy.y - size_y // 2 <= fire.y <= enemy.y + size_y // 2
 
         size_x, size_y = player.player_image.get_size()
-        killed_player = player.x - size_x // 2 <= fire.x <= player.x + size_x // 2 and player.y - size_y // 2 <= fire.y <= player.y + size_y // 2
+        killed_player = player.x - size_x // 2 <= fire.x \
+                        <= player.x + size_x // 2 and \
+                        player.y - size_y // 2 <= fire.y <= player.y + size_y // 2
 
         # check: did the fire flew from tank
         if not fire.flew and (killed_player or killed_enemy):

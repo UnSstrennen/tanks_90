@@ -1,5 +1,7 @@
 import pygame
 
+RESPAWN_PERIOD = 1000
+
 pygame.init()
 screen = pygame.display.set_mode((1000, 900))
 screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])
@@ -25,6 +27,8 @@ pygame.display.flip()
 class Player:
     def __init__(self, pos):
         self.x, self.y = pos
+        self.alive = True
+        self.time_of_last_death = 0
         self.go = 'up'
         self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/tank_up.png').convert_alpha()
@@ -32,34 +36,48 @@ class Player:
         self.paint()
 
     def move(self, x, y):
-        if 870 >= self.x + x >= 20 and 870 >= self.y + y >= 20:
-                self.x += x
-                self.y += y
-                self.paint()
+        if self.alive:
+            if 870 >= self.x + x >= 20 and 870 >= self.y + y >= 20:
+                    self.x += x
+                    self.y += y
+                    self.paint()
 
     def paint(self):
         screen.blit(self.player_image, self.player_image.get_rect(center=(self.x, self.y)))
 
     def img(self, name):
-        self.go = name.split('_')[-1][0:-4]
-        self.player_image = pygame.image.load(name).convert_alpha()
+        if self.alive:
+            if name != 'img/fire.png':
+                self.go = name.split('_')[-1][0:-4]
+            self.player_image = pygame.image.load(name).convert_alpha()
 
     def fire(self):
-        BULLET_SPEED = 20
-        SHOOT_PERIOD = 500
-        if not pygame.time.get_ticks() - self.time_of_last_shooting >= SHOOT_PERIOD:
-            return
-        if self.go == 'up':
-            x, y = 0, -BULLET_SPEED
-        elif self.go == 'down':
-            x, y = 0, BULLET_SPEED
-        elif self.go == 'left':
-            x, y = -BULLET_SPEED, 0
-        elif self.go == 'right':
-            x, y = BULLET_SPEED, 0
-        ball = Bullet(self.x, self.y, x, y, len(fires))
-        fires.append(ball)
-        self.time_of_last_shooting = pygame.time.get_ticks()
+        if self.alive:
+            BULLET_SPEED = 20
+            SHOOT_PERIOD = 500
+            if not pygame.time.get_ticks() - self.time_of_last_shooting >= SHOOT_PERIOD:
+                return
+            if self.go == 'up':
+                x, y = 0, -BULLET_SPEED
+            elif self.go == 'down':
+                x, y = 0, BULLET_SPEED
+            elif self.go == 'left':
+                x, y = -BULLET_SPEED, 0
+            elif self.go == 'right':
+                x, y = BULLET_SPEED, 0
+            ball = Bullet(self.x, self.y, x, y, len(fires))
+            fires.append(ball)
+            self.time_of_last_shooting = pygame.time.get_ticks()
+
+    def die(self):
+        self.img('img/fire.png')
+        self.alive = False
+        self.time_of_last_death = pygame.time.get_ticks()
+
+    def respawn(self):
+        if pygame.time.get_ticks() - self.time_of_last_death >= RESPAWN_PERIOD:
+            self.alive = True
+            player.img('img/tank_' + self.go + '.png')
 
 
 class Bullet:
@@ -67,7 +85,7 @@ class Bullet:
         OFFSET = -3.1  # aligns bullet
         self.flew = False
         self.x, self.y, self.nx, self.ny, self.ind = x + OFFSET, y + OFFSET, nx, ny, ind
-        self.player_image = pygame.image.load('img/fire.png').convert_alpha()
+        self.player_image = pygame.image.load('img/bullet.png').convert_alpha()
 
     def growth(self):
         self.x += self.nx
@@ -84,8 +102,10 @@ class Bullet:
 class Enemy(Player):
     def __init__(self, x, y):
         self.x, self.y = x, y
+        self.time_of_last_death = 0
         self.nx, self.ny = 0, 5
         self.go = 'down'
+        self.alive = True
         self.time_of_last_shooting = 0
         self.player_image = pygame.image.load('img/enemy_down.png').convert_alpha()
         self.paint()
@@ -129,9 +149,13 @@ while run:
             fire.flew = True
 
         if killed_enemy:
-            print("enemy killed")
+            index = fires.index(fire)
+            fires.pop(index)
+            enemy.die()
         if killed_player:
-            print("player killed")
+            index = fires.index(fire)
+            fires.pop(index)
+            player.die()
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -165,6 +189,11 @@ while run:
     elif keys[pygame.K_s]:
         enemy.img('img/enemy_down.png')
         enemy.move(0, SPEED)
+
+    if not enemy.alive:
+        enemy.respawn()
+    if not player.alive:
+        player.respawn()
 
     player.paint()
     enemy.paint()

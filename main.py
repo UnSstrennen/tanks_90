@@ -1,6 +1,7 @@
 import pygame
 
-RESPAWN_PERIOD = 1000
+
+RESPAWN_PERIOD = 700
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 900))

@@ -70,9 +70,10 @@ class Player:
             self.time_of_last_shooting = pygame.time.get_ticks()
 
     def die(self):
-        self.img('img/fire.png')
-        self.alive = False
-        self.time_of_last_death = pygame.time.get_ticks()
+        if self.alive:
+            self.img('img/fire.png')
+            self.alive = False
+            self.time_of_last_death = pygame.time.get_ticks()
 
     def respawn(self):
         if pygame.time.get_ticks() - self.time_of_last_death >= RESPAWN_PERIOD:

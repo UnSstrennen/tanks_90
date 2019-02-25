@@ -111,11 +111,114 @@ class Bullet:
         fires.pop(0)
 
 
+class Cell:
+    def __init__(self, pos, size, width=1, color='white', fill_color=None):
+        self.x, self.y = pos[0], pos[1]
+        self.size = size
+        self.width = width
+        self.color = color
+        self.fill_color = fill_color
+        self.draw()
+
+    def set_info(self, **kwargs):
+        if 'pos' in kwargs:
+            self.x, self.y = kwargs['pos']
+        if 'size' in kwargs:
+            self.size = kwargs['size']
+        if 'width' in kwargs:
+            self.width = kwargs['width']
+        if 'color' in kwargs:
+            self.color = kwargs['color']
+        if 'fill_color' in kwargs:
+            self.fill_color = kwargs['fill_color']
+
+    def draw(self):
+        pygame.draw.rect(screen, pygame.Color(self.color),
+                         (self.x, self.y, self.size, self.size), self.width)
+        if self.fill_color is not None:
+            self.draw_fill()
+
+    def draw_fill(self):
+        # @TODO: add a picture
+
+    def get_info(self):
+        info = {'x': self.x, 'y': self.y,
+                'size': self.size, 'width': self.width,
+                'color': self.color, 'fill_color': self.fill_color}
+        return info
+
+
+class Board:
+    # ���������������� ��������
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.board = [[0] * width for _ in range(height)]
+        # ���������������� ���� ������������������
+        self.left = 10
+        self.top = 10
+        self.cell_size = 25
+        self.tiles = list()
+        self.render()
+
+    # ������������������ ���������������� ��������
+    def set_view(self, left, top, cell_size):
+        self.left = left
+        self.top = top
+        self.cell_size = cell_size
+        self.render()
+
+    def set_info(self, **kwargs):
+        print(kwargs)
+        for row in self.tiles:
+            for cell in row:
+                cell.set_info(**kwargs)
+
+    # ����������
+    def render(self):
+        screen.fill(pygame.Color('black'))
+        self.tiles = list()
+        x = list()
+        q = 0
+        for h in range(self.height):
+            for w in range(self.width):
+                cell_obj = Cell([self.left + w * self.cell_size, self.top + h * self.cell_size], self.cell_size)
+                x.append(cell_obj)
+            self.tiles.append(x)
+            x = []
+
+    def draw(self):
+        screen.fill(pygame.Color('black'))
+        for h in range(self.height):
+            for w in range(self.width):
+                self.tiles[h][w].draw()
+            pygame.display.flip()
+
+    def get_cell(self, pos):
+        x, y = pos
+        for h in range(self.height):
+            for w in range(self.width):
+                if self.left + w * self.cell_size <= x <= self.left + w * self.cell_size + self.cell_size and self.top + h * self.cell_size <= y <= self.top + h * self.cell_size + self.cell_size:
+                    return tuple([w, h])
+        # return None if user clicked on background
+
+    def get_click(self, mouse_pos):
+        cell = self.get_cell(mouse_pos)
+        self.on_click(cell)
+
+    def on_click(self, cell_coords):
+        if cell_coords is not None:
+            pass
+
 player_f = Player((450, 250), 'img/first_', 'down')
 player_s = Player((450, 450), 'img/second_', 'up')
 pygame.time.set_timer(1, 500)
+board = Board(23, 20)
+board.set_view(6, 17, 43)
+board.set_info(fill_color=True)
 while run:
     screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])
+    board.draw()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False

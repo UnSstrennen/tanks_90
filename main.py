@@ -1,13 +1,14 @@
 import pygame
+import random
 
 
-RESPAWN_PERIOD, SPEED = 1000, 10
+RESPAWN_PERIOD, SPEED = 1000, 5
 run, move_tank = True, False
 time_of_last_shooting, fires = 0, []
 
 
 pygame.init()
-screen = pygame.display.set_mode((1000, 900))
+screen = pygame.display.set_mode((900, 900))
 screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])
 
 
@@ -112,39 +113,27 @@ class Bullet:
 
 
 class Cell:
-    def __init__(self, pos, size, width=1, color='white', fill_color=None):
+    def __init__(self, pos, fill):
         self.x, self.y = pos[0], pos[1]
-        self.size = size
-        self.width = width
-        self.color = color
-        self.fill_color = fill_color
-        self.draw()
+        self.fill = fill
+        if self.fill:
+            self.bricks = pygame.image.load('img/bricks.png').convert_alpha()
+            screen.blit(self.bricks, (self.x, self.y))
+            self.draw()
 
     def set_info(self, **kwargs):
         if 'pos' in kwargs:
             self.x, self.y = kwargs['pos']
-        if 'size' in kwargs:
-            self.size = kwargs['size']
-        if 'width' in kwargs:
-            self.width = kwargs['width']
-        if 'color' in kwargs:
-            self.color = kwargs['color']
-        if 'fill_color' in kwargs:
-            self.fill_color = kwargs['fill_color']
+        if 'fill' in kwargs:
+            self.fill = kwargs['fill']
 
     def draw(self):
-        pygame.draw.rect(screen, pygame.Color(self.color),
-                         (self.x, self.y, self.size, self.size), self.width)
-        if self.fill_color is not None:
-            self.draw_fill()
-
-    def draw_fill(self):
-        # @TODO: add a picture
+        if self.fill:
+            self.bricks = pygame.image.load('img/bricks.png').convert_alpha()
+            screen.blit(self.bricks, (self.x, self.y))
 
     def get_info(self):
-        info = {'x': self.x, 'y': self.y,
-                'size': self.size, 'width': self.width,
-                'color': self.color, 'fill_color': self.fill_color}
+        info = {'x': self.x, 'y': self.y, 'fill': self.fill}
         return info
 
 
@@ -169,7 +158,6 @@ class Board:
         self.render()
 
     def set_info(self, **kwargs):
-        print(kwargs)
         for row in self.tiles:
             for cell in row:
                 cell.set_info(**kwargs)
@@ -179,11 +167,16 @@ class Board:
         screen.fill(pygame.Color('black'))
         self.tiles = list()
         x = list()
-        q = 0
         for h in range(self.height):
             for w in range(self.width):
-                cell_obj = Cell([self.left + w * self.cell_size, self.top + h * self.cell_size], self.cell_size)
-                x.append(cell_obj)
+                q = False
+                z = []
+                for i in range(100):
+                    z.append((random.randint(0, 19), random.randint(0, 19)))
+                if (h, w) in z:
+                    q = True
+                x.append(Cell([self.left + w * self.cell_size,
+                               self.top + h * self.cell_size], q))
             self.tiles.append(x)
             x = []
 
@@ -192,7 +185,6 @@ class Board:
         for h in range(self.height):
             for w in range(self.width):
                 self.tiles[h][w].draw()
-            pygame.display.flip()
 
     def get_cell(self, pos):
         x, y = pos
@@ -210,14 +202,15 @@ class Board:
         if cell_coords is not None:
             pass
 
-player_f = Player((450, 250), 'img/first_', 'down')
-player_s = Player((450, 450), 'img/second_', 'up')
+
+player_f = Player((30, 30), 'img/first_', 'down')
+player_s = Player((870, 870), 'img/second_', 'up')
 pygame.time.set_timer(1, 500)
-board = Board(23, 20)
-board.set_view(6, 17, 43)
+board = Board(20, 20)
+board.set_view(0, 0, 45)
 board.set_info(fill_color=True)
 while run:
-    screen.blit(pygame.image.load("img/background.png").convert(), [0, 0])
+    screen.fill((0, 0, 0))
     board.draw()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -303,6 +296,7 @@ while run:
         player_s.respawn()
     if not player_f.alive:
         player_f.respawn()
+
 
     player_f.paint()
     player_s.paint()

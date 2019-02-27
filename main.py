@@ -173,12 +173,25 @@ class Board:
                 z = []
                 for i in range(100):
                     z.append((random.randint(0, 19), random.randint(0, 19)))
+                    z = self.add_eagle_bricks(z)
+                    print(z)
                 if (h, w) in z:
                     q = True
                 x.append(Cell([self.left + w * self.cell_size,
                                self.top + h * self.cell_size], q))
             self.tiles.append(x)
             x = []
+
+    def add_eagle_bricks(self, z):
+        eagle_bricks = [(18, 8), (18, 9), (18, 10), (18, 11), (19, 8), (19, 11)]
+        for brick in eagle_bricks:
+            if brick not in z:
+                z.append(brick)
+        eagle_coords = (19, 9)
+        # LBYL forever
+        if eagle_coords in z:
+            z.remove(eagle_coords)
+        return z
 
     def draw(self):
         screen.fill(pygame.Color('black'))

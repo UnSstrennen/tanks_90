@@ -216,8 +216,8 @@ class Board:
             pass
 
 
-player_f = Player((30, 30), 'img/first_', 'down')
-player_s = Player((870, 870), 'img/second_', 'up')
+player_f = Player((20, 20), 'img/first_', 'down')
+player_s = Player((880, 880), 'img/second_', 'up')
 pygame.time.set_timer(1, 500)
 board = Board(20, 20)
 board.set_view(0, 0, 45)

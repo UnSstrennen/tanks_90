@@ -23,6 +23,14 @@ clock = pygame.time.Clock()
 clock.tick()
 pygame.display.flip()
 
+bricks = []
+
+
+def is_on_brick(obj, brick):
+    if obj.x == brick.x and obj.y == brick.y:
+        return True
+    return False
+
 
 class Player:
     def __init__(self, pos, img_n, go):
@@ -35,6 +43,8 @@ class Player:
 
     def move(self, nx, ny):
         if 880 >= self.x + nx >= 20 and 880 >= self.y + ny >= 20 and self.alive:
+            for brick in bricks:
+                print(is_on_brick(self, brick))
             self.x += nx
             self.y += ny
             self.paint()
@@ -177,8 +187,10 @@ class Board:
                     print(z)
                 if (h, w) in z:
                     q = True
-                x.append(Cell([self.left + w * self.cell_size,
-                               self.top + h * self.cell_size], q))
+                brick = Cell([self.left + w * self.cell_size,
+                               self.top + h * self.cell_size], q)
+                x.append(brick)
+                bricks.append(brick)
             self.tiles.append(x)
             x = []
 

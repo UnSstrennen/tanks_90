@@ -184,7 +184,11 @@ class Board:
                 for i in range(100):
                     z.append((random.randint(0, 19), random.randint(0, 19)))
                     z = self.add_eagle_bricks(z)
-                    print(z)
+                    # remove disallowed bricks
+                    if (0, 0) in z:
+                        z.remove((0, 0))
+                        if (19, 19) in z:
+                            z.remove((19, 19))
                 if (h, w) in z:
                     q = True
                 brick = Cell([self.left + w * self.cell_size,

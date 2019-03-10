@@ -41,10 +41,8 @@ class Player:
         screen.blit(self.player_image, self.player_image.get_rect(center=(self.x, self.y)))
         self.paint()
 
-    def move(self, nx, ny):
+    def s(self, nx, ny):
         if 880 >= self.x + nx >= 20 and 880 >= self.y + ny >= 20 and self.alive:
-            for brick in bricks:
-                print(is_on_brick(self, brick))
             self.x += nx
             self.y += ny
             self.paint()
@@ -184,7 +182,6 @@ class Board:
                 for i in range(100):
                     z.append((random.randint(0, 19), random.randint(0, 19)))
                     z = self.add_eagle_bricks(z)
-                    print(z)
                 if (h, w) in z:
                     q = True
                 brick = Cell([self.left + w * self.cell_size,
@@ -228,8 +225,8 @@ class Board:
             pass
 
 
-player_f = Player((20, 20), 'img/first_', 'down')
-player_s = Player((880, 880), 'img/second_', 'up')
+player_f = Player((20, 20), 'img/first', '')
+player_s = Player((880, 880), 'img/second', '')
 pygame.time.set_timer(1, 500)
 board = Board(20, 20)
 board.set_view(0, 0, 45)
@@ -285,35 +282,27 @@ while run:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        player_s.img('img/second_left.png')
         player_s.move(-SPEED, 0)
 
     elif keys[pygame.K_RIGHT]:
-        player_s.img('img/second_right.png')
         player_s.move(SPEED, 0)
 
     elif keys[pygame.K_UP]:
-        player_s.img('img/second_up.png')
         player_s.move(0, -SPEED)
 
     elif keys[pygame.K_DOWN]:
-        player_s.img('img/second_down.png')
         player_s.move(0, SPEED)
 
     if keys[pygame.K_a]:
-        player_f.img('img/first_left.png')
         player_f.move(-SPEED, 0)
 
     elif keys[pygame.K_d]:
-        player_f.img('img/first_right.png')
         player_f.move(SPEED, 0)
 
     elif keys[pygame.K_w]:
-        player_f.img('img/first_up.png')
         player_f.move(0, -SPEED)
 
     elif keys[pygame.K_s]:
-        player_f.img('img/first_down.png')
         player_f.move(0, SPEED)
 
 

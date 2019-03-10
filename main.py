@@ -77,7 +77,6 @@ class Player:
             fires.append(ball)
             self.time_of_last_shooting = pygame.time.get_ticks()
 
-
     def die(self):
         if self.alive:
             self.alive = False
@@ -146,19 +145,16 @@ class Cell:
 
 
 class Board:
-    # ���������������� ��������
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self.board = [[0] * width for _ in range(height)]
-        # ���������������� ���� ������������������
         self.left = 10
         self.top = 10
         self.cell_size = 25
         self.tiles = list()
         self.render()
 
-    # ������������������ ���������������� ��������
     def set_view(self, left, top, cell_size):
         self.left = left
         self.top = top
@@ -170,7 +166,6 @@ class Board:
             for cell in row:
                 cell.set_info(**kwargs)
 
-    # ����������
     def render(self):
         screen.fill(pygame.Color('black'))
         self.tiles = list()
@@ -185,7 +180,7 @@ class Board:
                 if (h, w) in z:
                     q = True
                 brick = Cell([self.left + w * self.cell_size,
-                               self.top + h * self.cell_size], q)
+                              self.top + h * self.cell_size], q)
                 x.append(brick)
                 bricks.append(brick)
             self.tiles.append(x)
@@ -197,7 +192,6 @@ class Board:
             if brick not in z:
                 z.append(brick)
         eagle_coords = (19, 9)
-        # LBYL forever
         if eagle_coords in z:
             z.remove(eagle_coords)
         return z

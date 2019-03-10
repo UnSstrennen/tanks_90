@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
                 self.course = self.reaction_btn[btn][1]
                 nx, ny = self.reaction_btn[btn][0]
                 for i in obstacles:
-                    x_future , y_future = nx + self.rect.x, ny + self.rect.y
+                    x_future, y_future = nx + self.rect.x, ny + self.rect.y
                     if i.rect.collidepoint(x_future, y_future) or \
                        i.rect.collidepoint(x_future + 44, y_future + 44) or \
                        i.rect.collidepoint(x_future + 44, y_future) or \
@@ -131,25 +131,29 @@ class Bullet(pygame.sprite.Sprite):
         obstacle = pygame.sprite.spritecollideany(self, obstacles)
         if obstacle is not None and obstacle != self:
             self.kill()
-            obstacle.kill()
+            if not obstacle.strength:
+                obstacle.kill()
             return True
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, group, pos, img):
+    def __init__(self, group, pos, img, strength):
         super().__init__(group)
         self.image = pygame.image.load(img).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
+        self.strength = strength
 
 
 def map_generator(xn, yn, size):
     for y in range(yn):
         for x in range(xn):
             if map_list[y][x] == '1':
-                Obstacle(obstacles, (x * size, y * size), 'data/img/bricks.png')
+                Obstacle(obstacles, (x * size, y * size), 'data/img/bricks.png', False)
             elif map_list[y][x] == '2':
-                Obstacle(obstacles, (x * size, y * size), 'data/img/flag_red.png')
+                Obstacle(obstacles, (x * size, y * size), 'data/img/irons.png', True)
+            elif map_list[y][x] == '3':
+                Obstacle(obstacles, (x * size, y * size), 'data/img/flag_red.png', False)
 
 
 first_player = Player(players, 0, 0, {119: ((0, -SPEED), 0),

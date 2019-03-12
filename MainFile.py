@@ -9,8 +9,7 @@ players = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
 flags = pygame.sprite.Group()
-with open('data/map.txt', 'r') as f:
-    map_list = [i.split() for i in f.read().split('\n')]
+
 
 
 pygame.init()
@@ -165,10 +164,13 @@ class Flag(pygame.sprite.Sprite):
     def stop_game(self):
         global run
         run = False
-        return 'WIN' + self.text
+        return self.text
 
 
 def map_generator(xn, yn, size):
+    with open('data/map/map.txt', 'r') as f:
+        map_list = [a.split() for a in f.read().split('\n')]
+        print(len(map_list))
     for y in range(yn):
         for x in range(xn):
             if map_list[y][x] == '1':
@@ -177,8 +179,8 @@ def map_generator(xn, yn, size):
                 Obstacle(obstacles, (x * size, y * size), 'data/img/irons.png', True)
             elif map_list[y][x][0] == '3':
                 q = map_list[y][x][-1]
-                a = {'1': ('data/img/flag_red.png', 'First Player'),
-                     '2': ('data/img/flag_blue.png', 'Second Player')}
+                a = {'1': ('data/img/flag_red.png', 'FIRST PLAYER'),
+                     '2': ('data/img/flag_blue.png', 'SECOND PLAYER')}
                 Flag(flags, (x * size, y * size), a[q][0], a[q][1])
 
 
@@ -190,7 +192,7 @@ second_player = Player(players, 855, 855, {273: ((0, -SPEED), 0),
                                            276: ((-SPEED, 0), 1),
                                            274: ((0, SPEED), 2),
                                            275: ((SPEED, 0), -1)}, 'second.png')
-map_generator(60, 60, 15)
+map_generator(20, 20, 45)
 while run:
     pygame.time.Clock().tick(60)
     screen.fill((0, 0, 0))
@@ -218,4 +220,24 @@ while run:
     players.draw(screen)
     pygame.display.flip()
 
-screen.blit(pygame.image.load('data/img/game_over').convert_alpha())
+x = -900
+y = 200
+if len(text_end) == 13:
+    y = 150
+img = pygame.image.load('data/img/game_over.png').convert_alpha()
+text_end = pygame.font.Font(None, 100).render(text_end, True, (255, 0, 0))
+run = True
+
+
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+    if x != 0:
+        x += 1
+        screen.blit(img, [x, 0])
+        if x == 0:
+            screen.blit(text_end, [y, 700])
+        pygame.display.flip()
+
+pygame.quit()

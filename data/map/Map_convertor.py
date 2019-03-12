@@ -11,7 +11,8 @@ with open('map.txt', 'w') as f:
     for i in range(x):
         line = []
         for j in range(y):
-            r, g, b = pixels[i, j]
+            print(pixels[i, j])
+            r, g, b, s = pixels[i, j]
             if (r, g, b) == (255, 255, 255):
                 line.append('0')
             elif (r, g, b) == (0, 0, 0):
@@ -20,7 +21,7 @@ with open('map.txt', 'w') as f:
                 line.append('31')
             elif (r, g, b) == (0, 0, 255):
                 line.append('32')
-            elif (r, g, b) == (150, 150, 150):
+            elif (r, g, b) == (150, 150, 150) or (r, g, b) == (151, 151, 151):
                 line.append('2')
         print(' '.join(line[:]), file=f)
 print('Готово')

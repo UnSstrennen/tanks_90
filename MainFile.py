@@ -14,7 +14,6 @@ flags = pygame.sprite.Group()
 
 pygame.init()
 screen = pygame.display.set_mode((900, 900))
-screen.blit(pygame.image.load("data/img/background.png").convert(), [0, 0])
 
 pygame.mixer.init()
 background_sound = pygame.mixer.Sound('data/sound/background_music.wav')
@@ -136,11 +135,18 @@ class Bullet(pygame.sprite.Sprite):
                 obstacle.kill()
             return True
 
-        flag = pygame.sprite.spritecollideany(self, flags)
-        if flag is not None and flag != self:
+        flag2 = bool(pygame.sprite.collide_mask(self, flags.sprites()[0]))
+        flag1 = bool(pygame.sprite.collide_mask(self, flags.sprites()[1]))
+        print(self.parent)
+        first_won = flag1 and self.parent is first_player
+        second_won = flag2 and self.parent is second_player
+        if first_won or second_won:
             global text_end
             self.kill()
-            text_end = flag.stop_game()
+            if first_won:
+                text_end = flags.sprites()[1].stop_game()
+            elif second_won:
+                text_end = flags.sprites()[0].stop_game()
             return True
 
 
@@ -199,6 +205,7 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+            exit(0)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 first_player.fire(6)
@@ -228,15 +235,22 @@ img = pygame.image.load('data/img/game_over.png').convert_alpha()
 text_end = pygame.font.Font(None, 100).render(text_end, True, (255, 0, 0))
 run = True
 
+can_restart = False
 
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # TODO: make a restart
+            print('restart')
+            can_restart = False
+            pass
     if x != 0:
         x += 1
         screen.blit(img, [x, 0])
         if x == 0:
+            can_restart = True
             screen.blit(text_end, [y, 700])
         pygame.display.flip()
 

@@ -3,10 +3,12 @@ import pygame
 
 RESPAWN_PERIOD, SPEED = 1000, 5
 run, move_tank = True, False
+text_end = ''
 time_of_last_shooting, fires = 0, []
 players = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
+flags = pygame.sprite.Group()
 with open('data/map.txt', 'r') as f:
     map_list = [i.split() for i in f.read().split('\n')]
 
@@ -135,6 +137,13 @@ class Bullet(pygame.sprite.Sprite):
                 obstacle.kill()
             return True
 
+        flag = pygame.sprite.spritecollideany(self, flags)
+        if flag is not None and flag != self:
+            global text_end
+            self.kill()
+            text_end = flag.stop_game()
+            return True
+
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, group, pos, img, strength):
@@ -145,6 +154,20 @@ class Obstacle(pygame.sprite.Sprite):
         self.strength = strength
 
 
+class Flag(pygame.sprite.Sprite):
+    def __init__(self, group, pos, img, text):
+        super().__init__(group)
+        self.image = pygame.image.load(img).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = pos
+        self.text = text
+
+    def stop_game(self):
+        global run
+        run = False
+        return 'WIN' + self.text
+
+
 def map_generator(xn, yn, size):
     for y in range(yn):
         for x in range(xn):
@@ -152,8 +175,11 @@ def map_generator(xn, yn, size):
                 Obstacle(obstacles, (x * size, y * size), 'data/img/bricks.png', False)
             elif map_list[y][x] == '2':
                 Obstacle(obstacles, (x * size, y * size), 'data/img/irons.png', True)
-            elif map_list[y][x] == '3':
-                Obstacle(obstacles, (x * size, y * size), 'data/img/flag_red.png', False)
+            elif map_list[y][x][0] == '3':
+                q = map_list[y][x][-1]
+                a = {'1': ('data/img/flag_red.png', 'First Player'),
+                     '2': ('data/img/flag_blue.png', 'Second Player')}
+                Flag(flags, (x * size, y * size), a[q][0], a[q][1])
 
 
 first_player = Player(players, 0, 0, {119: ((0, -SPEED), 0),
@@ -164,7 +190,7 @@ second_player = Player(players, 855, 855, {273: ((0, -SPEED), 0),
                                            276: ((-SPEED, 0), 1),
                                            274: ((0, SPEED), 2),
                                            275: ((SPEED, 0), -1)}, 'second.png')
-map_generator(20, 20, 45)
+map_generator(60, 60, 15)
 while run:
     pygame.time.Clock().tick(60)
     screen.fill((0, 0, 0))
@@ -187,6 +213,9 @@ while run:
             i.respawn('data/img/' + i.name_img)
 
     bullets.draw(screen)
-    players.draw(screen)
+    flags.draw(screen)
     obstacles.draw(screen)
+    players.draw(screen)
     pygame.display.flip()
+
+screen.blit(pygame.image.load('data/img/game_over').convert_alpha())

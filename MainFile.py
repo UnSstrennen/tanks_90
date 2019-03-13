@@ -3,7 +3,7 @@ from random import randint
 
 
 RESPAWN_PERIOD, SPEED = 1000, 5
-BUFF_PERIOD, MAX_BUFFS = 1000, 2
+BUFF_PERIOD, MAX_BUFFS, TIME_OF_BUFF_ACTIVITY = 1000, 2, 5000
 run, move_tank = True, False
 text_end = ''
 map_list = []
@@ -44,6 +44,8 @@ class Player(pygame.sprite.Sprite):
                                              90 * self.course)
         self.time_of_last_shooting, self.alive, self.time_of_last_death = True, True, 0
         self.rect = self.image.get_rect()
+        self.can_die = True
+        self.time_of_last_buff = 0
         self.rect.x = x
         self.rect.y = y
 
@@ -77,7 +79,7 @@ class Player(pygame.sprite.Sprite):
             self.time_of_last_shooting = pygame.time.get_ticks()
 
     def death(self):
-        if self.alive:
+        if self.alive and self.can_die:
             self.alive = False
             sound = pygame.mixer.Sound('data/sound/hit.wav')
             sound.set_volume(0.1)
@@ -103,6 +105,11 @@ class Player(pygame.sprite.Sprite):
         name_boom_file = 'data/img/bang/kill' + str(frame_num) + '.png'
         self.image = pygame.transform.rotate(pygame.image.load(name_boom_file).convert_alpha(),
                                              90 * self.course)
+
+    def update(self):
+        if not self.can_die:
+            if pygame.time.get_ticks() - self.time_of_last_buff >= TIME_OF_BUFF_ACTIVITY:
+                self.can_die = True
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -179,7 +186,18 @@ class Buff(pygame.sprite.Sprite):
         self.image = pygame.image.load(img).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
+        self.mask = pygame.mask.from_surface(self.image)
 
+    def update(self):
+        if pygame.sprite.collide_mask(self, first_player):
+            first_player.can_die = False
+            first_player.time_of_last_buff = pygame.time.get_ticks()
+            self.kill()
+        if pygame.sprite.collide_mask(self, second_player):
+            first_player.can_die = False
+            first_player.time_of_last_buff = pygame.time.get_ticks()
+            print('COLLIDES SECOND')
+            self.kill()
 
 
 def map_generator(xn, yn, size):
@@ -249,6 +267,8 @@ while run:
     obstacles.draw(screen)
     players.draw(screen)
     buffs.draw(screen)
+    buffs.update()
+    players.update()
     pygame.display.flip()
 
 x = -900

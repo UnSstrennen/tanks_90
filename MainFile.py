@@ -33,6 +33,34 @@ clock.tick()
 pygame.display.flip()
 
 
+class Menu(pygame.sprite.Sprite):
+    def __init__(self, group, img):
+        super().__init__(group)
+        self.image = pygame.image.load(img).convert_alpha()
+        self.rect = self.image.get_rect()
+
+    def pressed_the_button(self, event):
+        x, y = event.pos
+        if 213 <= x <= 687 and 421 <= y <= 480:
+            return True
+        return False
+
+
+menu = pygame.sprite.Group()
+Menu(menu, 'data/img/menu.png')
+menu_run = True
+while menu_run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            menu_run = False
+            exit(0)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if menu.sprites()[0].pressed_the_button(event):
+                menu_run = False
+    menu.draw(screen)
+    pygame.display.flip()
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, group, x, y, reaction_btn, img):
         super().__init__(group)

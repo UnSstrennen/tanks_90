@@ -209,7 +209,7 @@ while run:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 first_player.fire(6)
-            if event.key == pygame.K_QUOTE:
+            if event.key == pygame.K_RSHIFT:
                 second_player.fire(6)
 
     keys = pygame.key.get_pressed()

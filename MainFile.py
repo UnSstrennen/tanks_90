@@ -1,14 +1,18 @@
 import pygame
+from random import randint
 
 
 RESPAWN_PERIOD, SPEED = 1000, 5
+BUFF_PERIOD, MAX_BUFFS = 1000, 2
 run, move_tank = True, False
 text_end = ''
+map_list = []
 time_of_last_shooting, fires = 0, []
 players = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
 flags = pygame.sprite.Group()
+buffs =  pygame.sprite.Group()
 
 
 
@@ -19,6 +23,9 @@ pygame.mixer.init()
 background_sound = pygame.mixer.Sound('data/sound/background_music.wav')
 background_sound.set_volume(0.1)
 background_sound.play(-1)
+
+BUFF_ID = 23
+pygame.time.set_timer(BUFF_ID, BUFF_PERIOD)
 
 shoot_clock = pygame.time.Clock()
 clock = pygame.time.Clock()
@@ -135,18 +142,11 @@ class Bullet(pygame.sprite.Sprite):
                 obstacle.kill()
             return True
 
-        flag2 = bool(pygame.sprite.collide_mask(self, flags.sprites()[0]))
-        flag1 = bool(pygame.sprite.collide_mask(self, flags.sprites()[1]))
-        print(self.parent)
-        first_won = flag1 and self.parent is first_player
-        second_won = flag2 and self.parent is second_player
-        if first_won or second_won:
+        flag = pygame.sprite.spritecollideany(self, flags)
+        if flag:
             global text_end
+            text_end = flag.stop_game()
             self.kill()
-            if first_won:
-                text_end = flags.sprites()[1].stop_game()
-            elif second_won:
-                text_end = flags.sprites()[0].stop_game()
             return True
 
 
@@ -173,10 +173,19 @@ class Flag(pygame.sprite.Sprite):
         return self.text
 
 
+class Buff(pygame.sprite.Sprite):
+    def __init__(self, group, pos, img):
+        super().__init__(group)
+        self.image = pygame.image.load(img).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = pos
+
+
+
 def map_generator(xn, yn, size):
     with open('data/map/map.txt', 'r') as f:
+        global map_list
         map_list = [a.split() for a in f.read().split('\n')]
-        print(len(map_list))
     for y in range(yn):
         for x in range(xn):
             if map_list[y][x] == '1':
@@ -198,14 +207,28 @@ second_player = Player(players, 855, 855, {273: ((0, -SPEED), 0),
                                            276: ((-SPEED, 0), 1),
                                            274: ((0, SPEED), 2),
                                            275: ((SPEED, 0), -1)}, 'second.png')
+
+
+def buff_generator():
+    if len(buffs.sprites()) < MAX_BUFFS:
+        while True:
+            j, i = randint(0, 19), randint(0, 19)
+            if map_list[i][j] == '0':
+                break
+        x, y = j * 45, i * 45
+        Buff(buffs, (x, y), 'data/img/buff.png')
+
+
 map_generator(20, 20, 45)
 while run:
-    pygame.time.Clock().tick(60)
+    pygame.time.Clock().tick(50)
     screen.fill((0, 0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
             exit(0)
+        if event.type == BUFF_ID:
+            buff_generator()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 first_player.fire(6)
@@ -225,6 +248,7 @@ while run:
     flags.draw(screen)
     obstacles.draw(screen)
     players.draw(screen)
+    buffs.draw(screen)
     pygame.display.flip()
 
 x = -900

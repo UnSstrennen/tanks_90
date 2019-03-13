@@ -3,7 +3,7 @@ from random import randint
 
 
 RESPAWN_PERIOD, SPEED = 1000, 5
-BUFF_PERIOD, MAX_BUFFS, TIME_OF_BUFF_ACTIVITY = 1000, 2, 5000
+BUFF_PERIOD, MAX_BUFFS, TIME_OF_BUFF_ACTIVITY = 10000, 2, 5000
 run, move_tank = True, False
 text_end = ''
 map_list = []
@@ -110,6 +110,14 @@ class Player(pygame.sprite.Sprite):
         if not self.can_die:
             if pygame.time.get_ticks() - self.time_of_last_buff >= TIME_OF_BUFF_ACTIVITY:
                 self.can_die = True
+        if self.can_die and self.name_img not in ['first.png', 'second.png']:
+            if self is first_player:
+                self.name_img = 'first.png'
+            else:
+                self.name_img = 'second.png'
+            self.image = pygame.transform.rotate(
+                pygame.image.load('data/img/' + self.name_img).convert_alpha(),
+                90 * self.course)
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -192,11 +200,16 @@ class Buff(pygame.sprite.Sprite):
         if pygame.sprite.collide_mask(self, first_player):
             first_player.can_die = False
             first_player.time_of_last_buff = pygame.time.get_ticks()
+            first_player.name_img = 'first_with_buff.png'
+            first_player.image = pygame.transform.rotate(pygame.image.load('data/img/' + first_player.name_img).convert_alpha(),
+                                    90 * first_player.course)
             self.kill()
         if pygame.sprite.collide_mask(self, second_player):
-            first_player.can_die = False
-            first_player.time_of_last_buff = pygame.time.get_ticks()
-            print('COLLIDES SECOND')
+            second_player.can_die = False
+            second_player.time_of_last_buff = pygame.time.get_ticks()
+            second_player.name_img = 'second_with_buff.png'
+            second_player.image = pygame.transform.rotate(pygame.image.load('data/img/' + second_player.name_img).convert_alpha(),
+                                    90 * second_player.course)
             self.kill()
 
 

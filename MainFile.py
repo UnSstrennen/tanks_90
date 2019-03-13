@@ -12,7 +12,7 @@ players = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
 flags = pygame.sprite.Group()
-buffs =  pygame.sprite.Group()
+buffs = pygame.sprite.Group()
 
 
 
@@ -23,6 +23,9 @@ pygame.mixer.init()
 background_sound = pygame.mixer.Sound('data/sound/background_music.wav')
 background_sound.set_volume(0.1)
 background_sound.play(-1)
+
+pygame.display.set_icon(pygame.image.load('data/img/icon.jpg'))
+pygame.display.set_caption('Tanks 1990')
 
 BUFF_ID = 23
 pygame.time.set_timer(BUFF_ID, BUFF_PERIOD)

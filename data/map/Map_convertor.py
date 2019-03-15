@@ -12,7 +12,7 @@ with open('map.txt', 'w') as f:
         line = []
         for j in range(y):
             print(pixels[i, j])
-            r, g, b, s = pixels[i, j]
+            r, g, b = pixels[i, j]
             if (r, g, b) == (255, 255, 255):
                 line.append('0')
             elif (r, g, b) == (0, 0, 0):
